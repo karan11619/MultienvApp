@@ -1,0 +1,60 @@
+services:
+  mongodb:
+    image: mongo:7
+    container_name: multienv-mongodb
+    restart: unless-stopped
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - multienv-network
+
+  dev-backend:
+    build:
+      context: ./backend/dev
+      dockerfile: Dockerfile
+    container_name: multienv-dev-backend
+    restart: unless-stopped
+    env_file:
+      - ./backend/dev/.env
+    ports:
+      - "3001:3001"
+    depends_on:
+      - mongodb
+    networks:
+      - multienv-network
+
+  prod-backend:
+    build:
+      context: ./backend/prod
+      dockerfile: Dockerfile
+    container_name: multienv-prod-backend
+    restart: unless-stopped
+    env_file:
+      - ./backend/prod/.env
+    ports:
+      - "3002:3002"
+    depends_on:
+      - mongodb
+    networks:
+      - multienv-network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: multienv-frontend
+    restart: unless-stopped
+    ports:
+      - "3000:80"
+    depends_on:
+      - dev-backend
+      - prod-backend
+    networks:
+      - multienv-network
+
+volumes:
+  mongodb_data:
+
+networks:
+  multienv-network:
+    driver: bridge
