@@ -4,7 +4,7 @@ A full-stack ticket management application demonstrating development and product
 
 ## GitHub Repository
 
-**Repository URL:** https://github.com/mohanDevOps-arch/MultienvApp
+**Repository URL:** https://github.com/karan11619/MultienvApp
 
 ## Project Overview
 
